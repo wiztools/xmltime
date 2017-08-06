@@ -6,9 +6,12 @@ import (
 	"time"
 )
 
-func isWithoutZ(v string) bool {
-	match, _ := regexp.MatchString("^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}$", v)
-	return match
+func mustAddZ(v string) bool {
+	if len([]rune(v)) == 19 {
+		match, _ := regexp.MatchString("^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}$", v)
+		return match
+	}
+	return false
 }
 
 // XMLTime comment
@@ -23,7 +26,7 @@ func (t *XMLTime) UnmarshalXML(d *xml.Decoder, start xml.StartElement) error {
 	if err != nil {
 		return err
 	}
-	if isWithoutZ(v) {
+	if mustAddZ(v) {
 		v += "Z"
 	}
 	// RFC3339: 2006-01-02T15:04:05Z07:00
@@ -38,7 +41,7 @@ func (t *XMLTime) UnmarshalXML(d *xml.Decoder, start xml.StartElement) error {
 // UnmarshalXMLAttr comment
 func (t *XMLTime) UnmarshalXMLAttr(attr xml.Attr) error {
 	v := attr.Value
-	if isWithoutZ(v) {
+	if mustAddZ(v) {
 		v += "Z"
 	}
 	parse, err := time.Parse(time.RFC3339, attr.Value)
