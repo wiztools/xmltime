@@ -12,8 +12,7 @@ type Root struct {
 	Dt      XMLTime  `xml:"dt"`
 }
 
-func TestXMLTime(t *testing.T) {
-	xmlData := "<root><dt>2006-01-02T15:04:05Z</dt></root>"
+func runTest(t *testing.T, xmlData string) {
 	var env Root
 	err := xml.Unmarshal([]byte(xmlData), &env)
 	if err != nil {
@@ -24,4 +23,9 @@ func TestXMLTime(t *testing.T) {
 	if o != "Dt: 2006-01-02 15:04:05 +0000 UTC." {
 		t.Fail()
 	}
+}
+
+func TestXMLTime(t *testing.T) {
+	runTest(t, "<root><dt>2006-01-02T15:04:05</dt></root>")
+	runTest(t, "<root><dt>2006-01-02T15:04:05Z</dt></root>")
 }
