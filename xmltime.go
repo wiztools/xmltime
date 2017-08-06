@@ -12,10 +12,13 @@ type XMLTime struct {
 
 // UnmarshalXML comment
 func (t *XMLTime) UnmarshalXML(d *xml.Decoder, start xml.StartElement) error {
-	const shortForm = time.RFC3339 // 2006-01-02T15:04:05Z07:00
 	var v string
-	d.DecodeElement(&v, &start)
-	parse, err := time.Parse(shortForm, v)
+	err := d.DecodeElement(&v, &start)
+	if err != nil {
+		return err
+	}
+	// RFC3339: 2006-01-02T15:04:05Z07:00
+	parse, err := time.Parse(time.RFC3339, v)
 	if err != nil {
 		return err
 	}
