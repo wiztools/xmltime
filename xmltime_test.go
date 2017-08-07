@@ -3,7 +3,6 @@ package xmltime
 import (
 	"encoding/xml"
 	"fmt"
-	"log"
 	"testing"
 )
 
@@ -12,13 +11,21 @@ type Root struct {
 	Dt      XMLTime  `xml:"dt"`
 }
 
-func runTest(t *testing.T, xmlData string, exp string) {
+func getDt(t *testing.T, xmlData string) (XMLTime, error) {
 	var env Root
 	err := xml.Unmarshal([]byte(xmlData), &env)
 	if err != nil {
-		log.Fatal("Error unmarshilling: ", err)
+		return env.Dt, err
 	}
-	o := fmt.Sprintf("Dt: %v.", env.Dt)
+	return env.Dt, nil
+}
+
+func runTest(t *testing.T, xmlData string, exp string) {
+	dt, err := getDt(t, xmlData)
+	if err != nil {
+		t.Fatal(err)
+	}
+	o := fmt.Sprintf("Dt: %v.", dt)
 	// fmt.Println(o)
 	if o != exp {
 		t.Fail()
@@ -38,8 +45,29 @@ func TestXMLTime(t *testing.T) {
 }
 
 func TestEmptyXMLTime(t *testing.T) {
+	emptyDtXML := "<root><dt/></root>"
+	withDtXML := "<root><dt>2006-01-02T15:04:05Z</dt></root>"
+
+	// Non-lenient test:
+	dt, err := getDt(t, emptyDtXML)
+	if err == nil {
+		t.Fail()
+	}
+
+	// Lenient test with support for empty dates:
 	AllowEmptyDateTime()
 	runTest(t,
-		"<root><dt/></root>",
+		emptyDtXML,
 		"Dt: 0001-01-01 00:00:00 +0000 UTC.")
+	dt, _ = getDt(t, emptyDtXML)
+
+	// IsBeginning() test:
+	if !dt.IsBeginning() {
+		t.Fail()
+	}
+
+	dt, _ = getDt(t, withDtXML)
+	if dt.IsBeginning() {
+		t.Fail()
+	}
 }

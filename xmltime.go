@@ -62,3 +62,12 @@ func (t *XMLTime) UnmarshalXMLAttr(attr xml.Attr) error {
 	*t = XMLTime{parse}
 	return nil
 }
+
+// IsBeginning comment
+func (t *XMLTime) IsBeginning() bool {
+	exp := time.Time{}
+	if t.Equal(exp) {
+		return true
+	}
+	return false
+}
