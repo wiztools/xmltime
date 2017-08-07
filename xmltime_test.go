@@ -36,3 +36,10 @@ func TestXMLTime(t *testing.T) {
 		"<root><dt>2006-01-02T15:04:05+05:30</dt></root>",
 		"Dt: 2006-01-02 15:04:05 +0530 IST.")
 }
+
+func TestEmptyXMLTime(t *testing.T) {
+	AllowEmptyDateTime()
+	runTest(t,
+		"<root><dt/></root>",
+		"Dt: 0001-01-01 00:00:00 +0000 UTC.")
+}
