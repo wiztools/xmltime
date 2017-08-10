@@ -11,6 +11,16 @@ type Root struct {
 	Dt      XMLTime  `xml:"dt"`
 }
 
+type RootEmpty struct {
+	XMLName xml.Name `xml:"root"`
+	Dt      XMLTime  `xml:"dt,omitempty"`
+}
+
+type RootAttr struct {
+	XMLName xml.Name `xml:"root"`
+	Dt      XMLTime  `xml:"dt,attr,omitempty"`
+}
+
 func getDt(t *testing.T, xmlData string) (XMLTime, error) {
 	var env Root
 	err := xml.Unmarshal([]byte(xmlData), &env)
@@ -68,6 +78,30 @@ func TestEmptyXMLTime(t *testing.T) {
 
 	dt, _ = getDt(t, withDtXML)
 	if dt.IsBeginning() {
+		t.Fail()
+	}
+}
+
+func TestOmitEmptyXMLTime(t *testing.T) {
+	emptyDtXML := "<root></root>"
+	var env RootEmpty
+	err := xml.Unmarshal([]byte(emptyDtXML), &env)
+	if err != nil {
+		t.Error(err)
+	}
+	if !env.Dt.IsBeginning() {
+		t.Fail()
+	}
+}
+
+func TestAttr(t *testing.T) {
+	dtXML := "<root dt=\"2006-01-02T15:04:05Z\"></root>"
+	var env RootAttr
+	err := xml.Unmarshal([]byte(dtXML), &env)
+	if err != nil {
+		t.Error(err)
+	}
+	if env.Dt.Year() != 2006 {
 		t.Fail()
 	}
 }
