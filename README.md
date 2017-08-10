@@ -16,6 +16,12 @@ To install:
 $ go get github.com/bambooengg/xmltime
 ```
 
+or, if you use [dep](https://github.com/golang/dep):
+
+```
+$ dep ensure github.com/bambooengg/xmltime
+```
+
 ## Parsing
 
 Take this example XML:
