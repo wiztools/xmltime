@@ -1,6 +1,6 @@
 # Golang xmltime
 
-Unmarshall XML element values and attributes in ISO8601/RFC3339 date-time format to `xmltime.XMLTime` values. `xmltime.XMLTime` just wraps `time.Time`:
+Marshal / unmarshal XML element values and attributes in ISO8601/RFC3339 date-time format to `xmltime.XMLTime` values. `xmltime.XMLTime` just wraps `time.Time`:
 
 ```go
 type XMLTime struct {
@@ -32,7 +32,7 @@ Take this example XML:
 </root>
 ```
 
-To unmarshall this XML, a struct like this needs to be defined:
+To unmarshal this XML, a struct like this needs to be defined:
 
 ```go
 import "encoding/xml"
@@ -44,11 +44,13 @@ type Root struct {
 }
 ```
 
-Unmarshalling, and getting a `xmltime.XMLTime` representation of the data is as simple as:
+Unmarshaling, and getting a `xmltime.XMLTime` representation of the data is as simple as:
 
 ```go
 import "fmt"
 import "encoding/xml"
+
+// ...
 
 var d Root
 // load XML into byte[] b
@@ -63,7 +65,7 @@ Refer the `xmltime_test.go` source code for example.
 
 When empty date-time values are encountered in XML, there are two ways to handle it:
 
-1. Unmarshall parse error: This will terminate the XML parsing.
+1. Unmarshal parse error: This will terminate the XML parsing.
 2. Assign a beginning date (since it's NOT possible to assign `nil` to struct instances in Go).
 
 The default behavior of this library is to error out the parsing, which is the option 1 above. If you want to use the library as described in option 2, you need to set an internal flag to the package:

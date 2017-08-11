@@ -52,7 +52,7 @@ func (t *XMLTime) unmarshall(v string) error {
 	return nil
 }
 
-// UnmarshalXML converts XML element value to xmltime.XMLTime.
+// UnmarshalXML implements xml.Unmarshaler interface.
 func (t *XMLTime) UnmarshalXML(d *xml.Decoder, start xml.StartElement) error {
 	var v string
 	err := d.DecodeElement(&v, &start)
@@ -62,10 +62,22 @@ func (t *XMLTime) UnmarshalXML(d *xml.Decoder, start xml.StartElement) error {
 	return t.unmarshall(v)
 }
 
-// UnmarshalXMLAttr converts attribute value to xmltime.XMLTime.
+// UnmarshalXMLAttr implements xml.UnmarshalerAttr interface.
 func (t *XMLTime) UnmarshalXMLAttr(attr xml.Attr) error {
 	v := attr.Value
 	return t.unmarshall(v)
+}
+
+// MarshalXML implements xml.Marshaler interface.
+func (t XMLTime) MarshalXML(e *xml.Encoder, start xml.StartElement) error {
+	e.EncodeElement(t.Format(time.RFC3339), start)
+	return nil
+}
+
+// MarshalXMLAttr implements xml.MarshalerAttr interface.
+func (t XMLTime) MarshalXMLAttr(name xml.Name) (xml.Attr, error) {
+	attr := xml.Attr{Name: name, Value: t.Format(time.RFC3339)}
+	return attr, nil
 }
 
 var beginningTime = time.Time{}

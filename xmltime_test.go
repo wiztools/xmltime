@@ -105,3 +105,23 @@ func TestAttr(t *testing.T) {
 		t.Fail()
 	}
 }
+
+func TestMarshal(t *testing.T) {
+	var env Root
+	xmlData := "<root><dt>2006-01-02T15:04:05Z</dt></root>"
+	_ = xml.Unmarshal([]byte(xmlData), &env)
+	out, _ := xml.Marshal(env)
+	if string(out) != xmlData {
+		t.Fail()
+	}
+}
+
+func TestMarshalAttr(t *testing.T) {
+	var env RootAttr
+	xmlData := "<root dt=\"2006-01-02T15:04:05Z\"></root>"
+	_ = xml.Unmarshal([]byte(xmlData), &env)
+	out, _ := xml.Marshal(env)
+	if string(out) != xmlData {
+		t.Fail()
+	}
+}
