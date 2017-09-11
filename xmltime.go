@@ -7,18 +7,17 @@ package xmltime
 
 import (
 	"encoding/xml"
-	"regexp"
 	"time"
 )
 
 var raiseParseErrOnEmpty = true
 
 func mustAddZ(v string) bool {
-	if len([]rune(v)) == 19 {
-		match, _ := regexp.MatchString("^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}$", v)
-		return match
+	_, err := time.Parse("2006-01-02T15:04:05", v)
+	if err != nil {
+		return false
 	}
-	return false
+	return true
 }
 
 /*
