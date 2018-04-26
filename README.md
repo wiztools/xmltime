@@ -13,13 +13,13 @@ The library is inspired from [this SO question and the answers suggested therein
 To install:
 
 ```
-$ go get github.com/bambooengg/xmltime
+$ go get github.com/wiztools/xmltime
 ```
 
 or, if you use [dep](https://github.com/golang/dep):
 
 ```
-$ dep ensure github.com/bambooengg/xmltime
+$ dep ensure github.com/wiztools/xmltime
 ```
 
 ## Parsing
@@ -36,7 +36,7 @@ To unmarshal this XML, a struct like this needs to be defined:
 
 ```go
 import "encoding/xml"
-import "github.com/bambooengg/xmltime"
+import "github.com/wiztools/xmltime"
 
 type Root struct {
 	XMLName xml.Name `xml:"root"`
